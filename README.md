@@ -1,2 +1,74 @@
-# spring-postgresql-reactive
-Spring Boot Reactive Relational Database Connectivity(R2DBC) to PostgreSQL
+<div id="badges" align="right">
+  <a href="https://www.linkedin.com/in/ajay-vasudevan" target="_blank" rel="noopener noreferrer">
+      <img src="https://img.shields.io/badge/LinkedIn-blue?logo=linkedin&logoColor=white&style=plastic" width="100" alt="LinkedIn Badge"/>
+  </a>
+</div>
+<h1 align="left">
+  <i>hey there ...</i>
+  <img src="https://media.giphy.com/media/w1OBpBd7kJqHrJnJ13/giphy.gif" width="45"/>
+</h1>
+
+Spring Data _Reactive Relational Database Connectivity_ or R2DBC allows developers to work with SQL databases in a
+fully-reactive and asynchronous manner, thus moving away from the "**one-thread-execution**" servlet container model.
+With the SQL drivers based on the new R2DBC specification from respective vendors, the drivers thus provide a
+completely new set of APIs to communicate effectively with Relational databases in a non-blocking manner. More details
+can be found [here](https://spring.io/projects/spring-data-r2dbc#overview) and [here](https://r2dbc.io).
+
+This github repository is to document a working code with the **minimum** required maven dependencies to get a
+successful 200 GET
+HTTP Response code. Lest assured, the code is supposed to work with the below mentioned steps.
+
+This code base is based on Spring Data R2DBC with PostgreSQL relational database.
+
+# Features implemented
+
+* Connect to PostgreSQL in asynchronous mode from Spring boot
+* Validate request and throw custom validation exception
+* Handle any exceptions and throws meaningful error messages
+* Maintain test classes execution coverage of 85 percentile and above
+* Dockerize the app with docker engine installed during image build
+
+1. #### Set up MySQL database
+
+* Run `docker run --name my-postgres-db -e POSTGRES_PASSWORD=mypostgrespassword -p 5432:5432 -d postgres:bullseye`.
+* Connect to database using [DBeaver](https://dbeaver.io)(u: postgres | p: mypostgrespassword)
+* Create **payroll** schema once connected to docker mysql container
+* Use **payroll** schema
+* Create **customer** table.`CREATE TABLE IF NOT EXISTS customers (
+  cust_id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  address VARCHAR(255) NOT NULL,
+  country VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  );`
+
+2. #### Set up Gitlab for registering the docker image
+
+* Create new project. `E.g.spring-postgres-reactive`
+
+3. #### Maven commands
+
+* Run unit tests & build project : `mvn clean package -T 8`
+* Build & push docker image to
+  GitLab : `mvn clean install -T 4 -Dgitlab-image=<<my-gitlab-image>> -Dgitlab-username=<<my-gitlab-username>> -Dgitlab-password=<<my-gitlab-password>>`
+  . _my-gitlab-image would look like registry.gitlab.com/<your-gitlab-username>
+  /spring-postgres-reactive/reactive-postgresql:
+  1.0.1_
+
+
+4. #### Run the container image pulled from Gitlab
+
+* Run `docker login registry.gitlab.com -u <<my-gitlab-username>> -p <<my-gitlab-password>>`
+* Change <your-gitlab-image> to above the gitlab image in docker-compose.yml
+* Run `docker-compose up`
+
+5. #### Test APIs in Postman
+
+* Import **spring-mysql-reactive.postman_collection.json** in Postman.
+* Hit the APIs.
+
+Cheers ...
+<br/><br/><img src="https://media.giphy.com/media/1BhVFK6ejcQV86UtHl/giphy.gif" width="100"/>
+
+
+
